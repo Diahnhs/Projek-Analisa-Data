@@ -70,7 +70,7 @@ byhwindspeed_df = create_windspeed(main_df)
 
 st.header("Bike Sharing")
 
-# Menampilkan grafik berdasarkan cuaca
+# menampilkan grafik berdasarkan cuaca
 st.subheader("Performance based on weather")
 fig, ax = plt.subplots(figsize=(10, 5))
 x = np.arange(3)
@@ -83,7 +83,7 @@ ax.set_xticks(x + 0, (["Clear,\nFew clouds,\nPartly cloudy",
 ax.legend(["Casual", "Registered"])
 st.pyplot(fig)
 
-# Menampilkan grafik penyewaan sepeda berdasarkan cuaca dan angin setiap bulan
+#menampilkan grafik penyewaan sepeda berdasarkan cuaca dan angin setiap bulan
 st.subheader("Monthly Bike Sharing based on weathersit and windspeed")
 fig, ax = plt.subplots(figsize=(10, 5))
 x = monthlysum_df['dteday']
