@@ -15,23 +15,18 @@ def create_sum_sharing(df):
     return sumshare_df
 
 def create_monthly_sharing(df):
-    monthlyshare_df = df.resample(rule='M', on='dteday').agg({
+    df_2011 = df[df['dteday'].dt.year == 2011]
+    monthlyshare_df = df_2011.resample(rule='M', on='dteday').agg({
         "casual": "sum",
         "registered": "sum",
-        "cnt": "sum"
+        "cnt": "sum",
+        "windspeed": "mean",
+        "weathersit": "mean"
     })
+    
     monthlyshare_df.index = monthlyshare_df.index.strftime('%B %Y')
     monthlyshare_df.reset_index(inplace=True)  
     return monthlyshare_df
-
-def create_workingday(df):
-    workday_df = df.groupby(by="workingday").agg({
-        "dteday": "first",
-        "casual": "sum",
-        "registered": "sum",
-        "cnt": "sum"
-    })
-    return workday_df
 
 def create_weathersit(df):
     weathersit_df = df.groupby(by="weathersit").agg({
@@ -70,13 +65,12 @@ main_df = clean_df[(clean_df["dteday"] >= str(start_date)) &
 
 sumsharing_df = create_sum_sharing(main_df)
 monthlysum_df = create_monthly_sharing(main_df)
-byday_df = create_workingday(main_df)
 byweathersit_df = create_weathersit(main_df)
 byhwindspeed_df = create_windspeed(main_df)
 
 st.header("Bike Sharing")
 
-# menampilkan grafik berdasarkan cuaca
+# Menampilkan grafik berdasarkan cuaca
 st.subheader("Performance based on weather")
 fig, ax = plt.subplots(figsize=(10, 5))
 x = np.arange(3)
@@ -89,12 +83,12 @@ ax.set_xticks(x + 0, (["Clear,\nFew clouds,\nPartly cloudy",
 ax.legend(["Casual", "Registered"])
 st.pyplot(fig)
 
-#menampilkan grafik penyewaan sepeda berdasarkan cuaca dan angin setiap bulan
-st.subheader("Perkembangan penyewa setiap bulan berdasarkan cuaca dan angin")
+# Menampilkan grafik penyewaan sepeda berdasarkan cuaca dan angin setiap bulan
+st.subheader("Monthly Bike Sharing based on weathersit and windspeed")
 fig, ax = plt.subplots(figsize=(10, 5))
-x = monthlyshare_df['dteday']
-ax.plot(x, monthlyshare_df['casual'], marker='o')
-ax.plot(x, monthlyshare_df['registered'], marker='o')
+x = monthlysum_df['dteday']
+ax.plot(x, monthlysum_df['windspeed'], marker='o')  
+ax.plot(x, monthlysum_df['weathersit'], marker='o') 
 ax.tick_params(axis='x', rotation=90)
-ax.legend(["Casual", "Registered"])
+ax.legend(["windspeed", "weathersit"])
 st.pyplot(fig)
