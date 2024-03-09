@@ -46,7 +46,7 @@ def create_windspeed(df):
     })
     return windspeed_df
 
-clean_df = pd.read_csv("all_data.csv")
+clean_df = pd.read_csv("https://github.com/Diahnhs/Projek-Analisa-Data/blob/main/Dashboard/main_data.csv")
 clean_df["dteday"] = pd.to_datetime(clean_df["dteday"])
 
 min_date = clean_df["dteday"].min()
